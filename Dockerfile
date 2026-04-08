@@ -9,7 +9,8 @@ FROM public.ecr.aws/lambda/python:3.11
 
 # Install dependencies first (cached layer -- only rebuilds if requirements.txt changes)
 COPY requirements.txt .
-RUN pip install --no-cache-dir anthropic pinecone voyageai python-dotenv
+RUN pip install --no-cache-dir "numpy==1.26.4" && \
+    pip install --no-cache-dir anthropic pinecone voyageai python-dotenv
 
 # Copy application source
 COPY src/ ./src/
