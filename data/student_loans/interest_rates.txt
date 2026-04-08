@@ -1,0 +1,53 @@
+CURRENT FEDERAL STUDENT LOAN INTEREST RATES (2024-2025)
+
+FEDERAL DIRECT LOANS:
+- Direct Subsidized Loans: 6.53% (fixed)
+- Direct Unsubsidized Loans: 7.05% (fixed)
+- Direct PLUS Loans: 8.05% (fixed)
+- Direct Consolidation Loans: Weighted average of consolidated loans (rounded up to nearest 1/8%)
+
+HOW INTEREST IS CALCULATED:
+- Interest accrues daily on unsubsidized loans
+- Interest does NOT accrue on subsidized loans while in school
+- Formula: Loan Amount × Interest Rate ÷ 365 = Daily Interest
+- Example: $10,000 loan at 6.53% = $1.79 daily interest
+
+MONTHLY PAYMENT IMPACT OF INTEREST RATES:
+- $30,000 loan at 6.53% (10-year repayment): $357/month total interest = $12,960
+- $30,000 loan at 7.05% (10-year repayment): $368/month total interest = $13,780
+- $30,000 loan at 8.05% (10-year repayment): $388/month total interest = $15,560
+
+HISTORICAL CONTEXT:
+- 2023-2024: 6.53% (Subsidized), 7.05% (Unsubsidized), 8.05% (PLUS)
+- 2022-2023: 3.73%, 5.28%, 6.28% (lower due to COVID freeze carryover)
+- Rates change annually based on 10-year Treasury note + fixed margin
+- Rates set by Congress, not by Department of Education
+- All federal loans have FIXED rates (don't change over life of loan)
+
+PRIVATE LOAN RATES (VARIABLE):
+- Range: 3.0% to 13.0%+ depending on:
+  - Credit score
+  - Debt-to-income ratio
+  - Cosigner status
+  - Lender policies
+  - Market conditions
+- Some private loans have variable rates (can increase over time)
+- Some have fixed rates
+
+ORIGINATION FEES (2024-2025):
+- Direct Subsidized Loans: 1.066%
+- Direct Unsubsidized Loans: 1.066%
+- Direct PLUS Loans: 4.228%
+- Fee is deducted from loan disbursement
+
+INTEREST RATE DIFFERENCES EXPLAINED:
+- Subsidized loans lowest: Government pays interest in school
+- Unsubsidized loans higher: Student responsible for all interest
+- PLUS loans highest: Higher risk (parents/grad students), higher cost
+- Private loans vary: Market-based, credit-dependent
+
+WHEN INTEREST STARTS ACCRUING:
+- Subsidized: After 6-month grace period post-graduation
+- Unsubsidized: From loan disbursement date (even while in school)
+- PLUS: From loan disbursement date
+- Interest on unsubsidized can capitalize (adds to principal) if unpaid

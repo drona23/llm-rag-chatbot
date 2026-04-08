@@ -1,0 +1,5 @@
+anthropic==0.42.0
+pinecone-client==3.2.0
+python-dotenv==1.0.0
+requests==2.31.0
+pathlib==1.0.1

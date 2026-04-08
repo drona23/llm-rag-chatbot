@@ -1,0 +1,114 @@
+FEDERAL STUDENT LOAN ELIGIBILITY REQUIREMENTS
+
+BASIC REQUIREMENTS FOR ALL FEDERAL LOANS:
+- Be a U.S. citizen or eligible non-citizen
+- Have a valid Social Security Number
+- Have a high school diploma or GED (or pass ability-to-benefit test)
+- Be enrolled at least half-time in an eligible degree program
+- Not be in default on another federal student loan
+- Not owe overpayment on federal student aid
+- Maintain satisfactory academic progress (SAP)
+
+FAFSA (FREE APPLICATION FOR FEDERAL STUDENT AID):
+- Required to apply for all federal student loans
+- Determines Expected Family Contribution (EFC)
+- Opens October 1 each year
+- Deadline: June 30 (but apply early for better aid)
+- Financial need determined by: Cost of Attendance - EFC
+- Assets considered: Student/parent savings, income, investments
+
+DIRECT SUBSIDIZED LOANS - ADDITIONAL REQUIREMENTS:
+- Must demonstrate financial need
+- FAFSA required
+- Can only borrow up to financial need amount
+- Must be undergraduate student (grad students not eligible)
+- Grade level limits:
+  - 1st year: $3,500 max
+  - 2nd year: $4,500 max
+  - 3rd+ year: $5,500 max
+
+DIRECT UNSUBSIDIZED LOANS - ADDITIONAL REQUIREMENTS:
+- NO financial need requirement
+- FAFSA still required (for federal aid consideration)
+- Available to undergrad and graduate students
+- Higher borrowing limits than subsidized
+- Graduate students can borrow up to cost of attendance
+
+DIRECT PLUS LOANS - ADDITIONAL REQUIREMENTS:
+- Parent PLUS: Parent of dependent undergraduate student
+- Graduate PLUS: Graduate or professional degree student
+- Credit check required (some adverse credit history may disqualify)
+- Cannot have adverse credit history including:
+  - 90+ days past due on any debt
+  - Foreclosure in past 5 years
+  - Bankruptcy discharge/dismissal in past 5 years
+  - Default on federal student loan
+  - Wage garnishment
+- Note: Explanatory statement can be submitted if adverse credit exists
+
+INELIGIBLE STUDENTS:
+- Non-citizen/non-eligible immigrant
+- No high school diploma/GED
+- Full-time enrollment not maintained
+- Failed to make Satisfactory Academic Progress (SAP)
+- Enrolled in non-accredited program
+- In default on federal loan
+- Owing overpayment on federal aid
+- Incarcerated individuals (for certain loan types)
+
+CITIZENSHIP/LEGAL STATUS REQUIREMENTS:
+Eligible:
+- U.S. citizen
+- U.S. national
+- U.S. permanent resident
+- F-1 student visa holders (some restrictions)
+- J-1 exchange student visa holders (some restrictions)
+
+Not Eligible:
+- Undocumented immigrants
+- F-2 dependent visa holders
+- Tourist/visitor visa status
+- Work visa holders (H-1B, L-1, etc.) - generally not eligible
+
+INCOME LIMITS FOR DEPENDENT vs INDEPENDENT STATUS:
+Dependent Status (most undergrads):
+- Parents' income/assets considered for FAFSA
+- Even if no parental contribution expected
+- Can't file as independent just to avoid reporting parents' info
+
+Independent Status:
+- You are 24+ years old, OR
+- Married, OR
+- Graduate/professional student, OR
+- Have legal dependents other than spouse, OR
+- Orphaned/in foster care, OR
+- Determined by school to have special circumstances
+
+SATISFACTORY ACADEMIC PROGRESS (SAP):
+- Maintain minimum GPA (typically 2.0 or higher)
+- Pass minimum credits per term (typically 75% of attempted)
+- Complete degree within maximum timeframe (150% of program length)
+- Reassessed each term
+- Loss of eligibility if SAP not met
+
+SCHOOL-SPECIFIC ELIGIBILITY:
+- School must be accredited by recognized accrediting agency
+- School must participate in federal student aid programs
+- School must be eligible institution:
+  - Colleges/universities
+  - Community colleges
+  - Career/technical schools
+  - Some online programs
+  - Some for-profit schools
+
+NOT ELIGIBLE:
+- Pre-K programs
+- Some online-only certificate programs
+- Non-accredited institutions
+- Some school districts/high schools
+
+INCOME REQUIREMENT FOR INCOME-DRIVEN PLANS:
+- No minimum income required to qualify
+- Some people with low income may have $0 payment
+- Discretionary income: (Adjusted Gross Income) - (Poverty Guideline)
+- Must recertify annually

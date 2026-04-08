@@ -1,0 +1,56 @@
+FEDERAL STUDENT LOAN TYPES
+
+1. DIRECT SUBSIDIZED LOANS
+- For undergraduate students with financial need
+- Government pays interest while in school (at least half-time)
+- Interest rate: 6.53% (2024-2025 academic year)
+- Minimum payment: $0 while in school
+- Maximum borrowing: $3,500-$5,500 per year (depends on year in school)
+- Grace period: 6 months after graduation before repayment begins
+- Total lifetime limit: $23,000
+
+2. DIRECT UNSUBSIDIZED LOANS
+- Available to undergraduate and graduate students
+- Student responsible for all interest (even while in school)
+- Interest rate: 7.05% (2024-2025 academic year)
+- Can defer payments while in school, but interest accrues
+- Undergraduate max: $5,500-$20,500 per year
+- Graduate max: $20,500 per year
+- Total lifetime limit: $57,500 (including subsidized loans)
+- Grace period: 6 months after graduation
+
+3. FEDERAL PLUS LOANS (Parent PLUS & Grad PLUS)
+- Parent PLUS: Available to parents of dependent undergraduates
+- Grad PLUS: Available to graduate and professional students
+- Interest rate: 8.05% (2024-2025 academic year)
+- No annual borrowing limit (within cost of attendance)
+- Requires credit check (some restrictions if adverse credit history)
+- Repayment begins 60 days after final disbursement
+- Can defer payments while student is enrolled at least half-time
+- No grace period
+
+4. DIRECT CONSOLIDATION LOANS
+- Combines multiple federal student loans into one
+- Single monthly payment instead of multiple
+- Interest rate: weighted average of consolidated loans (rounded up)
+- Can extend repayment period (up to 30 years)
+- No origination fee
+- Eligible loans: Direct Loans, Federal Family Education Loans (FFEL), Perkins Loans
+
+5. PERKINS LOANS (Limited availability)
+- Low-interest federal loans for students with exceptional financial need
+- Interest rate: 5% (fixed)
+- Interest doesn't accrue while in school or during grace periods
+- Maximum: $5,500 per year (undergrad), $8,000 per year (graduate)
+- 9-month grace period after graduation
+- Repayment period: up to 10 years
+- Note: New Perkins loans may not be available at all schools
+
+PRIVATE STUDENT LOANS
+- Offered by banks, credit unions, and online lenders
+- Interest rates vary: 3.0%-13.0%+ (depends on creditworthiness, lender)
+- Require credit check or cosigner
+- Fewer borrower protections than federal loans
+- No grace period on some loans
+- Repayment typically begins while in school
+- Examples: Discover Student Loans, SoFi, LendingClub

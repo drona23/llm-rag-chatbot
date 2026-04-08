@@ -1,0 +1,104 @@
+PUBLIC SERVICE LOAN FORGIVENESS (PSLF) - COMPLETE GUIDE
+
+WHAT IS PSLF:
+Public Service Loan Forgiveness is a federal program that forgives remaining student loan balances after 10 years of qualifying payments while working for a qualifying employer.
+
+HOW PSLF WORKS - STEP BY STEP:
+1. Work full-time for a qualifying employer (government or nonprofit)
+2. Enroll in an income-driven repayment plan
+3. Make 120 qualifying monthly payments (10 years)
+4. Submit Employment Certification Form annually
+5. Apply for forgiveness after 120 payments
+6. Remaining balance is forgiven TAX-FREE
+
+QUALIFYING EMPLOYERS:
+- Federal, state, local, or tribal government organizations
+- 501(c)(3) nonprofit organizations
+- Other nonprofits providing qualifying public services
+Examples:
+  - Public schools and universities
+  - Public hospitals
+  - Military service
+  - AmeriCorps and Peace Corps
+  - Public libraries
+  - Law enforcement agencies
+
+NOT QUALIFYING EMPLOYERS:
+- For-profit companies (even if working in public service role)
+- Partisan political organizations
+- Labor unions
+- Nonprofit organizations that do not have 501(c)(3) status
+  (unless they provide qualifying public services)
+
+QUALIFYING PAYMENTS:
+- Must be on income-driven repayment plan (IBR, PAYE, REPAYE, ICR)
+- Must be made on time (within 15 days of due date)
+- Must be for the full amount shown on billing statement
+- Must be made while working full-time for qualifying employer
+- Payments do NOT need to be consecutive
+- $0 payments on income-driven plans count as qualifying payments
+
+ELIGIBLE LOANS FOR PSLF:
+- Only Direct Loans qualify
+- FFEL (Federal Family Education Loans) do NOT qualify
+- Perkins Loans do NOT qualify directly
+- Solution: Consolidate FFEL/Perkins into Direct Consolidation Loan
+  (Note: Consolidation resets payment count to zero)
+
+TAX TREATMENT OF PSLF:
+- PSLF forgiveness is NOT taxable income
+- This is different from income-driven repayment forgiveness
+  (IDR forgiveness IS potentially taxable after 20-25 years)
+
+120 PAYMENT REQUIREMENT DETAILS:
+- Payments must be made monthly (12 per year)
+- 120 payments = exactly 10 years of payments
+- Payments do not need to be on the same loan
+- Can change employers as long as both qualify
+- Can switch income-driven plans during the 10 years
+
+ANNUAL CERTIFICATION (HIGHLY RECOMMENDED):
+- Submit PSLF Employment Certification Form annually
+- Verifies employer qualifies before you make all 120 payments
+- Confirms payments are counting toward the 120
+- Prevents surprises at year 10
+- File at StudentLoans.gov
+
+COMMON PSLF MISTAKES:
+- Not being on income-driven repayment plan
+- Working for non-qualifying employer
+- Having FFEL loans (must consolidate first)
+- Not submitting annual employment certification
+- Missing payments or paying wrong amount
+- Applying before 120 payments are complete
+
+INCOME-DRIVEN REPAYMENT + PSLF COMBINATION:
+- Income-driven plans reduce monthly payments
+- Lower payments = less out-of-pocket over 10 years
+- Remaining balance (often large) forgiven tax-free after 120 payments
+- Best strategy for high-balance, lower-income borrowers
+
+PAYMENT AMOUNT EXAMPLE ($50,000 loan, PSLF path):
+- Income-driven payment: ~$200/month
+- Total paid over 10 years: ~$24,000
+- Remaining balance forgiven: ~$40,000-$60,000 (with interest)
+- Tax on forgiveness: $0
+
+VERSUS standard repayment on same loan:
+- Standard payment: ~$590/month
+- Total paid over 10 years: ~$70,800
+- Nothing forgiven
+
+PSLF APPLICATION PROCESS:
+1. Verify 120 payments made using Payment Count on StudentLoans.gov
+2. Confirm qualifying employment for all periods
+3. Submit PSLF Application (PSLF Form)
+4. MOHELA (loan servicer) reviews application
+5. Receive forgiveness decision (typically 6-12 weeks)
+6. Remaining balance is forgiven
+
+TEACHER LOAN FORGIVENESS (DIFFERENT FROM PSLF):
+- Forgives up to $17,500 for teachers in low-income schools
+- Only 5 years required (not 10)
+- Cannot receive both Teacher and PSLF forgiveness for same period
+- Must choose one or use them sequentially

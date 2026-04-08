@@ -1,0 +1,96 @@
+FEDERAL STUDENT LOAN REPAYMENT PLANS
+
+STANDARD 10-YEAR REPAYMENT PLAN
+- Duration: 10 years (120 payments)
+- Monthly payment: Fixed amount
+- Example: $30,000 loan at 6.53% = $357/month
+- Total interest paid: ~$12,960
+- Best for: Those who can afford moderate payments
+- Advantages: Lowest total interest paid, quickest payoff
+- Disadvantages: Highest monthly payment
+- Eligibility: All Direct Loan borrowers
+
+GRADUATED REPAYMENT PLAN
+- Duration: 10 years (120 payments)
+- Monthly payment: Starts low, increases every 2 years
+- Example: $30,000 loan starts at $150/month, increases to $540/month
+- Total interest: Slightly higher than Standard Plan
+- Best for: Recent graduates with expected income growth
+- Advantages: Lower initial payments, built-in payment increase
+- Disadvantages: Payments increase, higher total interest
+- Eligibility: All Direct Loan borrowers
+
+INCOME-DRIVEN REPAYMENT PLANS:
+
+1. INCOME-BASED REPAYMENT (IBR)
+- Payment: 10% of discretionary income (new borrowers) or 15% (old borrowers)
+- Duration: 20-25 years
+- Loan forgiveness: After 20-25 years, remaining balance forgiven
+- Income verification: Required annually
+- Best for: Low-income borrowers, large loan amounts
+- Tax consequence: Forgiven amount may be taxable income
+
+2. INCOME-CONTINGENT REPAYMENT (ICR)
+- Payment: Higher of 20% of discretionary income OR fixed 12-year payment
+- Duration: 25 years
+- Loan forgiveness: After 25 years, remaining balance forgiven
+- Available to: All Direct Loan borrowers (including PLUS loans)
+- Recalculated: Annually based on income
+
+3. INCOME-SENSITIVE REPAYMENT
+- Payment: Based on annual income (not percentage of discretionary income)
+- Duration: Up to 15 years
+- No loan forgiveness
+- For: FFEL loans (older federal loans)
+- Monthly payment example: $100-$500 depending on income
+
+4. PAY AS YOU EARN (PAYE)
+- Payment: 10% of discretionary income
+- Duration: 20 years
+- Loan forgiveness: After 20 years
+- Best for: Low-income borrowers, high-balance loans
+- Income verification: Required annually
+- Tax consequence: Forgiven amount may be taxable
+- Eligibility: Relatively recent loan recipients
+
+5. REVISED PAY AS YOU EARN (REPAYE)
+- Payment: 10% of discretionary income
+- Duration: 20 years (undergrad) or 25 years (grad)
+- Loan forgiveness: After 20-25 years
+- Available to: All Direct Loan borrowers (including PLUS)
+- Interest subsidy: Government pays some unsubsidized interest if payment < accrued interest
+- Most recent plan with best benefits
+
+MONTHLY PAYMENT COMPARISON ($30,000 Loan at 6.53%):
+- Standard 10-year: $357/month fixed
+- Graduated: $150-$540/month (increases)
+- IBR (10% discretionary): $100-$400/month (varies by income)
+- PAYE (10% discretionary): $100-$400/month (varies by income)
+- ICR (20% discretionary): $150-$500/month (varies by income)
+
+LOAN FORGIVENESS PROGRAMS:
+
+PUBLIC SERVICE LOAN FORGIVENESS (PSLF)
+- For: Government/nonprofit employees
+- Duration: 10 years (120 qualifying payments)
+- Remaining balance: Forgiven after 120 payments
+- Income-driven plan: Required
+- Requirements: Work for eligible employer, make on-time payments
+- Tax consequence: Forgiven amount is NOT taxable
+
+TEACHER LOAN FORGIVENESS
+- For: Teachers in low-income schools
+- Amount: Up to $17,500 forgiveness
+- Duration: 5 years of teaching required
+- No forgiveness after 5 years (one-time benefit)
+
+PERKINS LOAN FORGIVENESS
+- For: Teachers, nurses, military, public service workers
+- Amount: Up to 100% forgiveness
+- Duration: Varies by profession (typically 5 years)
+
+CONSOLIDATION LOAN NOTE:
+- Consolidation does NOT directly lead to forgiveness
+- But consolidation required for some forgiveness programs
+- Extends repayment (increases total interest paid)
+- Benefits: Single payment, potential for income-driven plans

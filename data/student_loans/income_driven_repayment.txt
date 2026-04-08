@@ -1,0 +1,105 @@
+INCOME-DRIVEN REPAYMENT (IDR) PLANS - COMPLETE GUIDE
+
+WHAT IS INCOME-DRIVEN REPAYMENT:
+Income-driven repayment plans set your monthly student loan payment as a percentage of your discretionary income, instead of a fixed amount. Payments adjust annually based on your income and family size.
+
+DISCRETIONARY INCOME DEFINITION:
+Discretionary Income = Adjusted Gross Income (AGI) - Poverty Guideline
+- Poverty Guideline varies by family size and state
+- Example: Single person in 2024: poverty level = ~$15,060
+- If your AGI = $40,000, discretionary income = $40,000 - $15,060 = $24,940
+- Monthly payment (10%) = $24,940 × 10% ÷ 12 = ~$208/month
+
+THE 4 INCOME-DRIVEN PLANS:
+
+1. INCOME-BASED REPAYMENT (IBR)
+- Payment: 10% of discretionary income (new borrowers after July 2014)
+          15% of discretionary income (borrowers before July 2014)
+- Duration: 20 years (new borrowers) or 25 years (older borrowers)
+- Forgiveness: Remaining balance forgiven after repayment period
+- Tax: Forgiven amount may be taxable income
+- Cap: Payment never exceeds Standard 10-year payment amount
+- Eligibility: Must have financial hardship
+
+2. PAY AS YOU EARN (PAYE)
+- Payment: 10% of discretionary income
+- Duration: 20 years
+- Forgiveness: Remaining balance after 20 years
+- Tax: Forgiven amount may be taxable income
+- Cap: Payment never exceeds Standard 10-year payment amount
+- Eligibility: New borrowers as of Oct 1, 2007 with loans after Oct 1, 2011
+- Best for: Recent borrowers with high debt relative to income
+
+3. REVISED PAY AS YOU EARN (REPAYE)
+- Payment: 10% of discretionary income
+- Duration: 20 years (undergrad loans) or 25 years (grad loans)
+- Forgiveness: Remaining balance after repayment period
+- Tax: Forgiven amount may be taxable income
+- No payment cap (can exceed Standard plan payment if income rises)
+- Interest subsidy: Government pays 50% of unpaid interest on subsidized loans
+- Eligibility: All Direct Loan borrowers (no hardship required)
+- Best for: Those who want PSLF; most generous interest subsidy
+
+4. INCOME-CONTINGENT REPAYMENT (ICR)
+- Payment: Lower of: 20% of discretionary income OR fixed 12-year payment
+- Duration: 25 years
+- Forgiveness: Remaining balance after 25 years
+- Tax: Forgiven amount may be taxable income
+- Only income-driven plan available to Parent PLUS Loan borrowers
+  (after consolidation into Direct Consolidation Loan)
+- Eligibility: All Direct Loan borrowers
+
+HOW ANNUAL RECERTIFICATION WORKS:
+- Every year you must recertify income and family size
+- Submit tax return or income documentation
+- Payment recalculated based on new income
+- If income rises, payment rises
+- If income falls, payment falls
+- If you miss recertification, you're removed from IDR plan temporarily
+
+$0 PAYMENT POSSIBILITY:
+- If your income is at or below 150% of poverty guideline, payment = $0
+- $0 payments still count toward forgiveness
+- Interest still accrues on unsubsidized loans during $0 payments
+- REPAYE subsidizes 50% of unpaid interest even at $0 payment
+
+FORGIVENESS AFTER REPAYMENT PERIOD:
+- Remaining balance forgiven after 20-25 years of qualifying payments
+- IMPORTANT: Forgiven amount may be taxable as ordinary income
+- Example: $50,000 forgiven in high-income year = potentially $15,000+ in taxes
+- Exception: PSLF forgiveness is NOT taxable
+
+INTEREST ACCRUAL ON IDR PLANS:
+- If your payment doesn't cover all accrued interest, balance can grow
+- Called "negative amortization" - balance increases over time
+- REPAYE helps: government pays 50% of unpaid subsidized loan interest
+- At the end of repayment period, even large balances are forgiven
+
+IDR PLAN COMPARISON TABLE:
+Plan     | Rate  | Duration      | Cap?  | Interest Subsidy
+---------|-------|---------------|-------|------------------
+IBR      | 10%   | 20-25 years   | Yes   | No
+PAYE     | 10%   | 20 years      | Yes   | No
+REPAYE   | 10%   | 20-25 years   | No    | Yes (50%)
+ICR      | 20%   | 25 years      | No    | No
+
+MONTHLY PAYMENT EXAMPLES ($50,000 loan, single borrower):
+Income | Standard 10-yr | IBR (10%) | Notes
+$30,000 | $590/month    | $108/month | 82% reduction
+$50,000 | $590/month    | $275/month | 53% reduction
+$80,000 | $590/month    | $525/month | 11% reduction
+
+HOW TO ENROLL:
+1. Go to StudentLoans.gov
+2. Select "Income-Driven Repayment Plan Request"
+3. Link your tax return (IRS Data Retrieval Tool)
+4. Choose plan (or let system suggest best plan)
+5. Confirm enrollment with loan servicer
+6. Recertify annually
+
+BEST PLAN FOR YOUR SITUATION:
+- Pursuing PSLF: REPAYE or PAYE (lowest payments = most forgiven)
+- High income: IBR (payment cap protects from high payments)
+- Grad school loans: ICR (only option for PLUS loans)
+- Maximum interest subsidy: REPAYE
+- Recently graduated, low income: Any IDR plan (start with $0 payments if needed)
