@@ -1,18 +1,23 @@
 """
-END-TO-END TEST: Complete RAG System
+END-TO-END TEST: Complete RAG System (Phase 3 - Real Pinecone + Voyage AI)
 
 Tests the entire pipeline:
-1. Load all student loan documents
-2. Embed and store in vector DB
-3. Ask questions via RAG agent
-4. Evaluate every response
-5. Print full quality report
+1. Connect to real Pinecone vector DB (documents already uploaded via setup_pinecone.py)
+2. Ask questions via RAG agent using real semantic search
+3. Evaluate every response
+4. Print full quality report
+
+Run setup_pinecone.py first if you haven't already.
 """
 
 import os
 import pathlib
+from dotenv import load_dotenv
+
+load_dotenv(override=True)  # override empty shell vars with .env values
+
 from src.llm import LLMChat
-from src.vector_db_mock import MockVectorStore
+from src.vector_db import VectorStore
 from src.rag_agent import RAGAgent
 from src.evaluation import RAGEvaluator
 
@@ -21,50 +26,30 @@ BASE = pathlib.Path(__file__).parent
 # ─── SETUP ────────────────────────────────────────────────────────────────────
 
 print("=" * 70)
-print("  END-TO-END TEST: Student Loan RAG Chatbot")
+print("  END-TO-END TEST: Student Loan RAG Chatbot (Phase 3)")
 print("=" * 70)
 
-print("\n[1/4] Initializing components...")
-llm        = LLMChat()
-store      = MockVectorStore()
-agent      = RAGAgent(store, llm)
-evaluator  = RAGEvaluator()
-print("  ✓ LLMChat (claude-sonnet-4-6)")
-print("  ✓ MockVectorStore")
-print("  ✓ RAGAgent")
-print("  ✓ RAGEvaluator")
+print("\n[1/3] Initializing components...")
+llm       = LLMChat()
+store     = VectorStore(index_name="student-loans")
+agent     = RAGAgent(store, llm)
+evaluator = RAGEvaluator()
+print("  LLM:       Claude claude-sonnet-4-6")
+print("  Embeddings: Voyage AI voyage-3-large (1024 dims)")
+print("  Vector DB:  Pinecone (student-loans index)")
+print("  Evaluator:  RAGEvaluator")
 
-# ─── LOAD DOCUMENTS ───────────────────────────────────────────────────────────
-
-print("\n[2/4] Loading & embedding documents...")
-
-doc_paths = {
-    "loan_types":             BASE / "data/student_loans/loan_types.txt",
-    "interest_rates":         BASE / "data/student_loans/interest_rates.txt",
-    "repayment_plans":        BASE / "data/student_loans/repayment_plans.txt",
-    "eligibility":            BASE / "data/student_loans/eligibility.txt",
-    "faq":                    BASE / "data/student_loans/faq.txt",
-    "bad_credit_and_private": BASE / "data/student_loans/bad_credit_and_private.txt",
-    "pslf_and_forgiveness":   BASE / "data/student_loans/pslf_and_forgiveness.txt",
-    "income_driven_repayment":BASE / "data/student_loans/income_driven_repayment.txt",
-}
-
-docs_stored = []
-for name, path in doc_paths.items():
-    if path.exists():
-        text      = path.read_text()
-        embedding = llm.generate_embedding(text)
-        docs_stored.append({"id": name, "text": text, "embedding": embedding})
-        print(f"  ✓ {name} ({len(text):,} chars)")
-    else:
-        print(f"  ✗ MISSING: {path}")
-
-store.upsert_documents(docs_stored)
-print(f"\n  Total: {len(docs_stored)} documents in vector DB")
+# Verify documents are in Pinecone
+stats = store.index.describe_index_stats()
+doc_count = stats["total_vector_count"]
+print(f"\n  Documents in Pinecone: {doc_count}")
+if doc_count == 0:
+    print("\n  ERROR: No documents found. Run setup_pinecone.py first.")
+    exit(1)
 
 # ─── TEST QUESTIONS ────────────────────────────────────────────────────────────
 
-print("\n[3/4] Running RAG queries + evaluation...")
+print("\n[2/3] Running RAG queries + evaluation...")
 
 questions = [
     "What are the main types of federal student loans?",
@@ -84,10 +69,8 @@ for i, question in enumerate(questions, 1):
     print(f"  [{i}/{len(questions)}] {question[:60]}...")
 
     try:
-        # Full RAG pipeline
         result = agent.answer(question)
 
-        # Evaluate
         scores = evaluator.full_evaluation(
             query=question,
             response=result["response"],
@@ -103,22 +86,23 @@ for i, question in enumerate(questions, 1):
         })
 
         grade = (
-            "✓ Excellent" if scores["overall_score"] > 0.75 else
-            "✓ Good"      if scores["overall_score"] > 0.60 else
-            "⚠ Fair"      if scores["overall_score"] > 0.45 else
-            "✗ Poor"
+            "Excellent" if scores["overall_score"] > 0.75 else
+            "Good"      if scores["overall_score"] > 0.60 else
+            "Fair"      if scores["overall_score"] > 0.45 else
+            "Poor"
         )
         print(f"       {grade} | Overall: {scores['overall_score']:.0%} | "
               f"Faith: {scores['faithfulness']:.0%} | "
-              f"Relevance: {scores['relevance']:.0%}")
+              f"Relevance: {scores['relevance']:.0%} | "
+              f"Confidence: {result['confidence']:.0%}")
 
     except Exception as e:
-        print(f"       ✗ ERROR: {e}")
+        print(f"       ERROR: {e}")
         results.append({"question": question, "error": str(e)})
 
 # ─── FULL REPORT ───────────────────────────────────────────────────────────────
 
-print("\n[4/4] Full quality report...")
+print("\n[3/3] Full quality report...")
 
 print("\n" + "=" * 70)
 print("  DETAILED RESPONSES")
@@ -132,14 +116,13 @@ for i, r in enumerate(results, 1):
 
     print(f"\n[Q{i}] {r['question']}")
     print("-" * 70)
-    # Print first 400 chars of response
     preview = r["response"][:400].replace("\n", " ")
     print(f"  Response: {preview}...")
-    print(f"  Retrieval confidence: {r['confidence']:.1%}")
-    print(f"  Relevance:            {r['scores']['relevance']:.1%}")
-    print(f"  Faithfulness:         {r['scores']['faithfulness']:.1%}")
-    print(f"  Answer relevance:     {r['scores']['answer_relevance']:.1%}")
-    print(f"  Overall:              {r['scores']['overall_score']:.1%}")
+    print(f"  Confidence:       {r['confidence']:.1%}")
+    print(f"  Faithfulness:     {r['scores']['faithfulness']:.1%}")
+    print(f"  Relevance:        {r['scores']['relevance']:.1%}")
+    print(f"  Answer relevance: {r['scores']['answer_relevance']:.1%}")
+    print(f"  Overall:          {r['scores']['overall_score']:.1%}")
 
 # ─── SUMMARY ──────────────────────────────────────────────────────────────────
 
@@ -149,11 +132,11 @@ print("=" * 70)
 
 successful = [r for r in results if "scores" in r]
 if successful:
-    avg_overall      = sum(r["scores"]["overall_score"]      for r in successful) / len(successful)
-    avg_faith        = sum(r["scores"]["faithfulness"]       for r in successful) / len(successful)
-    avg_relevance    = sum(r["scores"]["relevance"]          for r in successful) / len(successful)
-    avg_ans_rel      = sum(r["scores"]["answer_relevance"]   for r in successful) / len(successful)
-    avg_confidence   = sum(r["confidence"]                   for r in successful) / len(successful)
+    avg_overall    = sum(r["scores"]["overall_score"]    for r in successful) / len(successful)
+    avg_faith      = sum(r["scores"]["faithfulness"]     for r in successful) / len(successful)
+    avg_relevance  = sum(r["scores"]["relevance"]        for r in successful) / len(successful)
+    avg_ans_rel    = sum(r["scores"]["answer_relevance"] for r in successful) / len(successful)
+    avg_confidence = sum(r["confidence"]                 for r in successful) / len(successful)
 
     print(f"\n  Questions tested:    {len(questions)}")
     print(f"  Successful:          {len(successful)}")
@@ -164,16 +147,15 @@ if successful:
     print(f"  Avg Relevance:       {avg_relevance:.1%}")
     print(f"  Avg Answer Rel:      {avg_ans_rel:.1%}")
     print(f"  Avg Confidence:      {avg_confidence:.1%}")
-
     print()
-    if avg_overall > 0.75:
-        print("  ✓ System quality: EXCELLENT - production ready")
-    elif avg_overall > 0.60:
-        print("  ✓ System quality: GOOD - acceptable for demo")
-    elif avg_overall > 0.45:
-        print("  ⚠ System quality: FAIR - needs improvement")
-    else:
-        print("  ✗ System quality: POOR - requires work")
+
+    verdict = (
+        "EXCELLENT - Production Ready" if avg_overall > 0.75 else
+        "GOOD - Acceptable for Demo"   if avg_overall > 0.60 else
+        "FAIR - Needs Improvement"     if avg_overall > 0.45 else
+        "POOR - Requires Work"
+    )
+    print(f"  System verdict: {verdict}")
 
 print("\n" + "=" * 70)
 print("  END-TO-END TEST COMPLETE")

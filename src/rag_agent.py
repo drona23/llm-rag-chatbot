@@ -1,8 +1,7 @@
 """RAG agent combining vector retrieval + LLM generation."""
 from src.llm import LLMChat
-# Phase 1: Use mock vector store (no Pinecone needed)
-# Phase 2: Switch to real Pinecone with: from src.vector_db import VectorStore
-from src.vector_db_mock import MockVectorStore as VectorStore
+# Phase 3: Real Pinecone + Voyage AI embeddings
+from src.vector_db import VectorStore
 
 
 class RAGAgent:
@@ -31,9 +30,10 @@ class RAGAgent:
         query_embedding = self.llm.generate_embedding(user_query)
 
         # Step 2: Retrieve relevant documents
-        # top_k=8 retrieves all docs with mock embeddings (no semantic order)
-        # With real Pinecone embeddings, reduce to 3-5 for precision
-        retrieved = self.vector_store.retrieve(query_embedding, top_k=8)
+        # Phase 3: top_k=5 works because Voyage AI embeddings are semantic.
+        # Real embeddings rank documents by actual meaning, not random hashing.
+        # So the top 5 results are genuinely the most relevant documents.
+        retrieved = self.vector_store.retrieve(query_embedding, top_k=5)
         context_docs = [doc["text"] for doc in retrieved]
 
         # Step 3: Generate response with context

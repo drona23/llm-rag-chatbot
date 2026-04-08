@@ -1,5 +1,7 @@
 """LLM interface using Claude API."""
+import os
 import anthropic
+import voyageai
 
 
 class LLMChat:
@@ -8,41 +10,34 @@ class LLMChat:
     def __init__(self, model: str = "claude-sonnet-4-6"):
         self.client = anthropic.Anthropic()
         self.model = model
+        # Phase 3: Real Voyage AI embeddings
+        # voyage-3-large understands semantic meaning, not just character patterns
+        self.voyage = voyageai.Client(api_key=os.environ["VOYAGE_API_KEY"])
 
     def generate_embedding(self, text: str) -> list[float]:
         """
-        Convert text to embedding vector.
+        Convert text to embedding vector using Voyage AI.
 
-        In production: Use dedicated embedding model (Voyage AI, Cohere)
-        For Phase 1: Using mock embeddings for testing
+        Phase 3 upgrade from mock hash embeddings.
+        Voyage AI understands meaning, so similar concepts get similar vectors.
+        Auto-retries on rate limit (3 RPM on free tier) with 65s wait.
 
         Returns:
-            List of 768 numbers representing semantic meaning of text
+            List of 1024 floats representing semantic meaning of text
         """
-        # PLACEHOLDER: Mock embedding for Phase 1 testing
-        # In production, call actual embedding API:
-        # response = embedding_client.embed(model="voyage-3-large", input=text)
-        # return response.embeddings[0]
+        import time
+        import voyageai
 
-        # For now, return deterministic mock based on text length
-        # This allows vector DB to work for testing
-        import hashlib
-        import random
-
-        hash_obj = hashlib.md5(text.encode())
-        hash_int = int(hash_obj.hexdigest(), 16)
-
-        # Generate 768 dimensional vector
-        # Fix: use per-dimension seed so each doc gets truly unique vectors
-        # Without this, all vectors look similar → retrieval is random
-        vector = []
-        for i in range(768):
-            # XOR with dimension index creates unique seed per dimension
-            dim_seed = hash_int ^ (i * 2654435761)  # Knuth multiplicative hash
-            rng = random.Random(dim_seed)
-            vector.append(rng.uniform(-1.0, 1.0))
-
-        return vector
+        for attempt in range(3):
+            try:
+                result = self.voyage.embed([text], model="voyage-3-large")
+                return result.embeddings[0]
+            except voyageai.error.RateLimitError:
+                if attempt < 2:
+                    print(f"\n  [Rate limit] Waiting 65s before retry {attempt + 2}/3...", flush=True)
+                    time.sleep(65)
+                else:
+                    raise
 
     def generate_response(
         self,
