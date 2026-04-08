@@ -47,7 +47,7 @@ AI:      "Based on Document 1, the rate is 6.53% for 2024-2025."
 
 ## Why Student Loans?
 
-- Affects **43+ million student in America**
+- Affects **43+ million students in America**
 - Interest rates **reset every year**, so static AI knowledge goes stale
 - High stakes: wrong advice = real financial harm
 - Rich public data from Federal Student Aid & StudentLoans.gov
