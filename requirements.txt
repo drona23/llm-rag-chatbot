@@ -2,4 +2,4 @@ anthropic==0.88.0
 pinecone==7.3.0
 voyageai==0.3.7
 python-dotenv==1.2.1
-requests==2.31.0
+gradio>=5.0.0
