@@ -143,7 +143,7 @@ Return {response, sources, confidence, retrieval_scores}
 
 ---
 
-## Phase 3: Real Vector DB (Planned)
+## Phase 3: Real Vector DB (Complete)
 
 ```
 Current (Phase 1-2):               Planned (Phase 3):
@@ -162,7 +162,7 @@ Switch: Change 1 line in rag_agent.py:
 
 ---
 
-## Phase 4: AWS Deployment (Planned)
+## Phase 4: AWS Deployment (Complete)
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -220,7 +220,7 @@ RAGAgent         relevance        semantic           CloudWatch
 answer()         answer_rel       retrieval          monitoring
 
 STATUS:          STATUS:          STATUS:            STATUS:         STATUS:
-  ✓ Done           ✓ Done           Planned            Planned         Planned
+  ✓ Done           ✓ Done           ✓ Done             ✓ Done          Planned
 ```
 
 ---

@@ -1,0 +1,111 @@
+{
+  "Comment": "CloudWatch config for Student Loan RAG Chatbot Lambda",
+  "metrics": {
+    "namespace": "RAGChatbot",
+    "dimensions": [
+      { "Name": "FunctionName", "Value": "rag-chatbot" }
+    ],
+    "alarms": [
+      {
+        "AlarmName": "RAGChatbot-Errors",
+        "MetricName": "Errors",
+        "Threshold": 5,
+        "EvaluationPeriods": 1,
+        "Period": 300,
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Statistic": "Sum",
+        "TreatMissingData": "notBreaching",
+        "AlarmDescription": "Alert when Lambda errors exceed 5 in 5 minutes"
+      },
+      {
+        "AlarmName": "RAGChatbot-Latency",
+        "MetricName": "Duration",
+        "Threshold": 30000,
+        "EvaluationPeriods": 3,
+        "Period": 60,
+        "ComparisonOperator": "GreaterThanThreshold",
+        "Statistic": "p95",
+        "TreatMissingData": "notBreaching",
+        "AlarmDescription": "Alert when p95 latency exceeds 30s (Voyage AI rate limit impact)"
+      },
+      {
+        "AlarmName": "RAGChatbot-Throttles",
+        "MetricName": "Throttles",
+        "Threshold": 10,
+        "EvaluationPeriods": 1,
+        "Period": 60,
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Statistic": "Sum",
+        "TreatMissingData": "notBreaching",
+        "AlarmDescription": "Alert on Lambda throttling (increase reserved concurrency)"
+      }
+    ]
+  },
+  "logs": {
+    "logGroup": "/aws/lambda/rag-chatbot",
+    "retentionDays": 30,
+    "metricFilters": [
+      {
+        "FilterName": "ColdStarts",
+        "FilterPattern": "Cold start: initializing RAG agent",
+        "MetricName": "ColdStartCount",
+        "MetricValue": "1",
+        "Unit": "Count"
+      },
+      {
+        "FilterName": "HighConfidence",
+        "FilterPattern": "[..., confidence=confidence_val, ...]",
+        "MetricName": "ResponseConfidence",
+        "MetricValue": "$confidence_val",
+        "Unit": "None"
+      },
+      {
+        "FilterName": "RAGErrors",
+        "FilterPattern": "RAG pipeline error",
+        "MetricName": "RAGPipelineErrors",
+        "MetricValue": "1",
+        "Unit": "Count"
+      }
+    ]
+  },
+  "dashboard": {
+    "DashboardName": "RAGChatbot",
+    "widgets": [
+      {
+        "type": "metric",
+        "title": "Invocations & Errors",
+        "metrics": [
+          ["AWS/Lambda", "Invocations", "FunctionName", "rag-chatbot"],
+          ["AWS/Lambda", "Errors", "FunctionName", "rag-chatbot"]
+        ],
+        "period": 300,
+        "stat": "Sum"
+      },
+      {
+        "type": "metric",
+        "title": "Latency (p50 / p95 / p99)",
+        "metrics": [
+          ["AWS/Lambda", "Duration", "FunctionName", "rag-chatbot", { "stat": "p50" }],
+          ["AWS/Lambda", "Duration", "FunctionName", "rag-chatbot", { "stat": "p95" }],
+          ["AWS/Lambda", "Duration", "FunctionName", "rag-chatbot", { "stat": "p99" }]
+        ],
+        "period": 60
+      },
+      {
+        "type": "log",
+        "title": "Recent Errors",
+        "query": "SOURCE '/aws/lambda/rag-chatbot' | filter @message like /ERROR/ | sort @timestamp desc | limit 20",
+        "period": 3600
+      },
+      {
+        "type": "metric",
+        "title": "Cold Starts",
+        "metrics": [
+          ["RAGChatbot", "ColdStartCount", "FunctionName", "rag-chatbot"]
+        ],
+        "period": 3600,
+        "stat": "Sum"
+      }
+    ]
+  }
+}
