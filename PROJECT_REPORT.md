@@ -8,7 +8,7 @@ This project implements a production-quality Retrieval-Augmented Generation (RAG
 
 ## Problem Statement
 
-Large language models like Claude have broad knowledge but lack access to specific, structured domain data. A student asking about loan eligibility or repayment options needs accurate, current information — not generalized answers.
+Large language models like Claude have broad knowledge but lack access to specific, structured domain data. A student asking about loan eligibility or repayment options needs accurate, current information, not generalized answers.
 
 **RAG solves this** by retrieving relevant documents before generating an answer, grounding Claude's responses in verified source material.
 
@@ -19,12 +19,12 @@ Large language models like Claude have broad knowledge but lack access to specif
 ### Phase 1: Core RAG System
 
 **Components built:**
-- `LLMChat` — Claude API wrapper with prompt engineering
-- `MockVectorStore` — In-memory vector database with cosine similarity
-- `RAGAgent` — Orchestrator combining retrieval + generation
+- `LLMChat`: Claude API wrapper with prompt engineering
+- `MockVectorStore`: In-memory vector database with cosine similarity
+- `RAGAgent`: Orchestrator combining retrieval + generation
 - Mock embedding system using deterministic hash-based vectors
 
-**Key design decision — Prompt Structure:**
+**Key design decision: Prompt Structure:**
 ```
 DOCUMENTS:
 [Document 1] {retrieved text}
@@ -75,7 +75,7 @@ This structured prompt design reduced hallucination and improved source citation
 ### End-to-End Test (8 Questions)
 
 ```
-System verdict: EXCELLENT — Production Ready
+System verdict: EXCELLENT, Production Ready
 Overall Score: 76.2%
 ```
 
@@ -121,7 +121,7 @@ income_driven_repayment.txt → IBR, PAYE, REPAYE, ICR explained
 ## Limitations
 
 **Mock Embeddings (Phase 1)**
-- Not semantic — retrieval order is not meaningful
+- Not semantic. Retrieval order is not meaningful.
 - Workaround: retrieve all documents (`top_k=8`)
 - Phase 3 fix: Real Voyage AI embeddings via Pinecone
 

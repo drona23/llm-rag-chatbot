@@ -6,7 +6,7 @@
 ![Status](https://img.shields.io/badge/Status-Production_Ready-brightgreen?style=flat-square)
 ![Score](https://img.shields.io/badge/Quality_Score-76.2%25-blue?style=flat-square)
 
-A conversational AI system that answers student loan questions using verified federal documentation — built with Claude (Anthropic), vector search, and a custom quality evaluation framework.
+A conversational AI system that answers student loan questions using verified federal documentation. Built with Claude (Anthropic), vector search, and a custom quality evaluation framework.
 
 ---
 
@@ -14,9 +14,9 @@ A conversational AI system that answers student loan questions using verified fe
 
 Student loan information is complex, scattered, and hard to find.
 
-When you ask a general AI *"What's the interest rate for my student loan?"* — it gives a generic answer. It doesn't know **your loan type**, **your school**, or the **current 2024-2025 rates**. It might even make something up.
+When you ask a general AI *"What's the interest rate for my student loan?"*, it gives a generic answer. It doesn't know **your loan type**, **your school**, or the **current 2024-2025 rates**. It might even make something up.
 
-This is called **hallucination** — AI confidently giving wrong information.
+This is called **hallucination**: AI confidently giving wrong information.
 
 > ⚠️ For student loans, wrong information is dangerous. Wrong repayment advice could cost someone thousands of dollars.
 
@@ -48,8 +48,8 @@ AI:      "Based on Document 1, the rate is 6.53% for 2024-2025."
 ## Why Student Loans?
 
 - Affects **43+ million Americans**
-- Interest rates **reset every year** — static AI knowledge goes stale
-- High stakes — wrong advice = real financial harm
+- Interest rates **reset every year**, so static AI knowledge goes stale
+- High stakes: wrong advice = real financial harm
 - Rich public data from Federal Student Aid & StudentLoans.gov
 - Mirrors real-world fintech/lending AI use cases
 
@@ -75,7 +75,7 @@ flowchart TD
 
 ---
 
-## RAG Pipeline — Step by Step
+## RAG Pipeline: Step by Step
 
 ```mermaid
 sequenceDiagram
@@ -134,7 +134,7 @@ Tested against **8 real student loan questions**:
 | Relevance | **61.2%** | Uses source documents |
 | Answer Relevance | **75.0%** | Actually answers question |
 
-**Verdict: ✅ EXCELLENT — Production Ready**
+**Verdict: ✅ EXCELLENT, Production Ready**
 
 | Question | Score |
 |----------|-------|
@@ -173,7 +173,7 @@ llm-rag-chatbot/
 
 ### Requirements
 - Python 3.11+
-- Anthropic API key — [get one here](https://console.anthropic.com/)
+- Anthropic API key ([get one here](https://console.anthropic.com/))
 
 ```bash
 # 1. Clone the repo
