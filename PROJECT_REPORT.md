@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements a production-quality Retrieval-Augmented Generation (RAG) chatbot for student loan information. It demonstrates end-to-end LLM engineering including document retrieval, prompt engineering, response generation, and automated quality evaluation.
+This project implements a production-quality Retrieval-Augmented Generation (RAG) chatbot for student loan information. It demonstrates end-to-end LLM engineering including document retrieval, prompt engineering, response generation, automated quality evaluation, cloud deployment, and a web interface.
 
 ---
 
@@ -19,12 +19,12 @@ Large language models like Claude have broad knowledge but lack access to specif
 ### Phase 1: Core RAG System
 
 **Components built:**
-- `LLMChat`: Claude API wrapper with prompt engineering
+- `LLMChat`: Claude API wrapper with structured prompt engineering
 - `MockVectorStore`: In-memory vector database with cosine similarity
-- `RAGAgent`: Orchestrator combining retrieval + generation
+- `RAGAgent`: Orchestrator combining retrieval and generation
 - Mock embedding system using deterministic hash-based vectors
 
-**Key design decision: Prompt Structure:**
+**Key design decision - Prompt Structure:**
 ```
 DOCUMENTS:
 [Document 1] {retrieved text}
@@ -40,7 +40,7 @@ Instructions:
 
 This structured prompt design reduced hallucination and improved source citation.
 
-### Phase 2: Evaluation Framework + Data Expansion
+### Phase 2: Evaluation Framework and Data Expansion
 
 **Evaluation metrics implemented:**
 
@@ -55,18 +55,43 @@ This structured prompt design reduced hallucination and improved source citation
 - Added `pslf_and_forgiveness.txt`
 - Added `income_driven_repayment.txt`
 
+### Phase 3: Real Vector Database and Semantic Embeddings
+
+**Components upgraded:**
+- `VectorStore`: Replaced mock store with live Pinecone integration (serverless, AWS us-east-1, cosine similarity metric)
+- `LLMChat.generate_embedding()`: Replaced hash-based mock with Voyage AI `voyage-3-large` model (1024-dimensional vectors)
+
+**Impact:**
+- Retrieval is now semantically meaningful: similar concepts return similar documents
+- Reduced `top_k` from 8 (retrieve all) to 5 (precise semantic matches)
+- Added rate limit handling for Voyage AI free tier (3 requests per minute)
+
+### Phase 4: AWS Lambda Deployment and Web Interface
+
+**Infrastructure built:**
+- `lambda_handler.py`: API Gateway proxy handler with module-level agent initialization for warm start optimization, CORS headers, and input validation
+- `Dockerfile`: Lambda container image based on `public.ecr.aws/lambda/python:3.11` to support large dependencies
+- `cloudwatch_config.json`: Three production alarms (error rate, p95 latency, throttles), log metric filters for cold starts and RAG errors, and a monitoring dashboard
+
+**Web interface:**
+- `app.py`: Gradio `gr.Blocks` layout with chat panel and live sources sidebar
+- Right panel updates in real time with each response, showing retrieved source documents, cosine similarity scores, and confidence level (HIGH / MEDIUM / LOW)
+- Example questions preloaded for interview demos
+
 ---
 
-## Bugs Found & Fixed (Code Review)
+## Bugs Found and Fixed (Code Review)
 
 | Bug | Impact | Fix |
 |-----|--------|-----|
-| Mock embeddings nearly identical | Random retrieval | XOR-based per-dimension hashing |
-| Faithfulness used wrong scores | Metric was measuring wrong thing | Pass real retrieval scores |
-| Confidence used minimum score | Pessimistic, counter-intuitive | Use average score |
+| Mock embeddings nearly identical | Random retrieval order | XOR-based per-dimension hashing |
+| Faithfulness used wrong scores | Metric measured wrong thing | Pass real retrieval scores from vector DB |
+| Confidence used minimum score | Pessimistic, counter-intuitive | Use average score across retrieved docs |
 | `evaluate_response()` returned None | Silent failure | Raise NotImplementedError |
-| Hardcoded absolute paths | Broke on any other machine | Use `pathlib.Path(__file__).parent` |
+| Hardcoded absolute paths | Broke on other machines | Use `pathlib.Path(__file__).parent` |
 | Sentence splitter broke on decimals | "6.53%" split into "6" + "53%" | Regex lookbehind split |
+| `gr.State` with live SSL sockets | Gradio deepcopy crash on startup | Move agent to module-level global |
+| Gradio chat history format | TypeError on every message | Update from tuple pairs to messages format |
 
 ---
 
@@ -90,14 +115,14 @@ Overall Score: 76.2%
 | Can I get a loan with bad credit? | 71% | Good |
 | When do I start paying back loans? | 83% | Excellent |
 
-### Before vs After Fixes
+### Before vs After Bug Fixes
 
 | Metric | Before | After | Improvement |
 |--------|--------|-------|-------------|
 | Overall Score | 63.5% | 76.2% | +12.7% |
 | Faithfulness | 59.4% | 88.4% | +29.0% |
 | Relevance | 57.5% | 61.2% | +3.7% |
-| Confidence | -0.2% | 49.9% | Fixed |
+| Confidence (avg) | broken | 49.9% | Fixed |
 
 ---
 
@@ -106,34 +131,33 @@ Overall Score: 76.2%
 8 documents covering the full student loan lifecycle:
 
 ```
-loan_types.txt              → 5 federal loan types + private loans
-interest_rates.txt          → 2024-2025 rates, history, origination fees
-repayment_plans.txt         → Standard, Graduated, IDR plans, forgiveness
-eligibility.txt             → FAFSA, citizenship, SAP requirements
-faq.txt                     → 20 common questions answered
-bad_credit_and_private.txt  → Credit requirements, cosigner options
-pslf_and_forgiveness.txt    → PSLF step-by-step, qualifying employers
-income_driven_repayment.txt → IBR, PAYE, REPAYE, ICR explained
+loan_types.txt              -> 5 federal loan types + private loans
+interest_rates.txt          -> 2024-2025 rates, history, origination fees
+repayment_plans.txt         -> Standard, Graduated, IDR plans, forgiveness
+eligibility.txt             -> FAFSA, citizenship, SAP requirements
+faq.txt                     -> 20 common questions answered
+bad_credit_and_private.txt  -> Credit requirements, cosigner options
+pslf_and_forgiveness.txt    -> PSLF step-by-step, qualifying employers
+income_driven_repayment.txt -> IBR, PAYE, REPAYE, ICR explained
 ```
 
 ---
 
 ## Limitations
 
-**Mock Embeddings (Phase 1)**
-- Not semantic. Retrieval order is not meaningful.
-- Workaround: retrieve all documents (`top_k=8`)
-- Phase 3 fix: Real Voyage AI embeddings via Pinecone
-
 **Evaluation Metrics**
 - Keyword-based, not semantic
 - Faithfulness check is approximate (not using NLI model)
-- Production upgrade: Use LLM-as-judge evaluation
+- Planned upgrade: LLM-as-judge evaluation using Claude to score responses
 
-**No Real-time Data**
-- Documents are static (created April 2026)
+**Static Data**
+- Documents created April 2026, updated manually
 - Interest rates change annually
-- Phase 5 fix: Firecrawl integration for live data
+- Phase 5 fix: Firecrawl integration for automated live data from StudentLoans.gov
+
+**No Authentication**
+- Current Lambda handler accepts all requests
+- Production would require API keys or JWT tokens on the API Gateway
 
 ---
 
@@ -143,22 +167,22 @@ This project directly mirrors real-world ML engineering work:
 
 | Job Requirement | Project Demonstration |
 |-----------------|----------------------|
-| LLM-powered conversational agents | Full RAG chatbot with multi-turn history |
+| LLM-powered conversational agents | Full RAG chatbot with multi-turn conversation history |
 | RAG pipelines | Vector retrieval + prompt augmentation |
-| Prompt engineering | Structured system + user prompts |
+| Prompt engineering | Structured system and user prompts |
 | Evaluate model outputs | 3-metric evaluation framework |
-| Data quality & annotation | 8 structured domain documents |
-| Python + ML tooling | Pure Python implementation |
+| Data quality and annotation | 8 structured domain documents |
+| Python and ML tooling | Anthropic, Pinecone, Voyage AI SDKs |
+| Cloud deployment | AWS Lambda container image + API Gateway |
+| Monitoring and observability | CloudWatch alarms, dashboards, log filters |
 
 ---
 
 ## Future Work
 
-| Phase | Task | Priority |
-|-------|------|----------|
-| 3 | Replace mock embeddings with Voyage AI | High |
-| 3 | Replace MockVectorStore with Pinecone | High |
-| 4 | Deploy to AWS Lambda + API Gateway | Medium |
-| 4 | Add CloudWatch monitoring | Medium |
-| 5 | Firecrawl integration for live rates | Low |
-| 5 | LLM-as-judge evaluation | Low |
+| Phase | Task | Priority | Status |
+|-------|------|----------|--------|
+| 5 | Firecrawl integration for live StudentLoans.gov data | High | Planned |
+| 5 | Scheduled weekly document sync | Medium | Planned |
+| 5 | LLM-as-judge evaluation | Medium | Planned |
+| 5 | API authentication and rate limiting | Low | Planned |

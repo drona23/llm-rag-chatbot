@@ -1,40 +1,43 @@
-# Architecture Diagram (How Everything Connects)
+# Architecture: Student Loan RAG Chatbot
 
-## High-Level View
+## High-Level System View
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    YOUR CHATBOT SYSTEM                      │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    RAG CHATBOT SYSTEM                       |
++-------------------------------------------------------------+
 
-                        USER ASKS A QUESTION
-                                ↓
-                    ┌───────────────────────┐
-                    │   RAG Agent (Brain)   │
-                    └───────────────────────┘
-                         ↙          ↘
-            ┌──────────────────┐  ┌──────────────────┐
-            │  Vector Database │  │   Claude (AI)    │
-            │    (Pinecone)    │  │    (API)         │
-            └──────────────────┘  └──────────────────┘
-                    ↑                      ↑
-                    │                      │
-         ┌──────────┴──────────┐  ┌────────┴─────────┐
-         │ Your Documents      │  │ LLM Wrapper      │
-         │ (PDFs, Text Files)  │  │ (llm.py)         │
-         └─────────────────────┘  └──────────────────┘
+                      USER ASKS A QUESTION
+                               |
+                   +-----------v-----------+
+                   |   RAG Agent (Brain)   |
+                   |     rag_agent.py      |
+                   +-----------+-----------+
+                        /                \
+           +-----------v--------+  +------v-----------+
+           |   Vector Database  |  |   Claude API     |
+           |   (Pinecone Cloud) |  |   (Anthropic)    |
+           +--------------------+  +------------------+
+                    |                        |
+       +------------v-----------+  +---------v--------+
+       | Voyage AI Embeddings   |  |   llm.py wrapper |
+       | (voyage-3-large, 1024d)|  |   + prompt logic |
+       +------------------------+  +------------------+
+                    |
+       +------------v-----------+
+       | 8 Student Loan Docs    |
+       | data/student_loans/    |
+       +------------------------+
 
 
-STEP-BY-STEP:
-1. User: "What's the interest rate?"
-2. RAG Agent extracts key words
-3. RAG Agent converts question to vector
-4. Vector DB searches: "Which documents are similar?"
-5. Vector DB returns: [doc_auto_loans.txt, doc_rates.txt, doc_policies.txt]
-6. RAG Agent sends to Claude: "Using these 3 documents, answer: What's the rate?"
-7. Claude reads documents and answers
-8. RAG Agent evaluates: "Is this answer good? Did Claude hallucinate?"
-9. Return: {answer: "...", sources: [...], confidence: 0.95}
+QUERY FLOW (every request):
+1. User: "What is the interest rate?"
+2. Voyage AI converts question to 1024-dimensional vector
+3. Pinecone finds the 5 most similar document vectors
+4. RAG Agent builds structured prompt: docs + question + instructions
+5. Claude reads documents and generates a grounded answer
+6. Evaluator scores faithfulness, relevance, answer quality
+7. Return: {answer, sources, confidence, retrieval_scores}
 ```
 
 ---
@@ -43,213 +46,219 @@ STEP-BY-STEP:
 
 ```
 User Input
-    ↓
-┌─────────────────────┐
-│   rag_agent.py      │ ← Main orchestrator (the director)
-└─────────────────────┘
-    ↙        ↘
-   /          \
-  /            \
- ↓              ↓
-vector_db.py   llm.py          evaluation.py
-(Retrieval)    (Generation)    (Quality Check)
+    |
+    v
++---------------------+
+|   rag_agent.py      |  <-- Main orchestrator
++---------------------+
+    /         |          \
+   /           |           \
+  v            v            v
+vector_db.py  llm.py    evaluation.py
+(Retrieval)  (Generation) (Quality Check)
 
 vector_db.py:
-- Takes: question (text)
-- Does: converts to vector, searches Pinecone
-- Returns: relevant documents
+  Input:  query embedding (1024-dim float list)
+  Does:   cosine similarity search in Pinecone
+  Output: list of {text, score} dicts
 
 llm.py:
-- Takes: documents + question
-- Does: sends to Claude with smart prompt
-- Returns: answer
+  Input:  context documents + user question
+  Does:   builds structured prompt, calls Claude API
+  Output: answer string
 
 evaluation.py:
-- Takes: answer + documents
-- Does: checks if answer is faithful
-- Returns: score (0-1)
+  Input:  answer + source documents + query
+  Does:   keyword overlap, sentence grounding checks
+  Output: {faithfulness, relevance, answer_relevance, overall}
 ```
 
 ---
 
-## Data Flow Diagram
+## Data Flow: Setup vs Runtime
 
 ```
-SETUP PHASE (One time):
-┌─────────────────┐
-│ Raw Documents   │  (PDFs, CSVs, text files about your business)
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│  Embedding API  │  (Convert text to vectors)
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│  Pinecone DB    │  (Store vectors + original text)
-└─────────────────┘
+SETUP (one time - run setup_pinecone.py):
+
++---------------------+
+| 8 .txt Documents    |
+| data/student_loans/ |
++----------+----------+
+           |
+           v
++----------+----------+
+| Voyage AI Embedding |  voyage-3-large -> 1024-dim vector per doc
++----------+----------+
+           |
+           v
++----------+----------+
+| Pinecone Index      |  student-loans, cosine metric, AWS us-east-1
+| Store vectors +     |
+| metadata (text)     |
++---------------------+
 
 
-RUNTIME PHASE (Every time user asks):
-┌──────────────────┐
-│  User Question   │  "What's the interest rate?"
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Convert to Vec   │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│  Search Pinecone │  "Find 5 most similar documents"
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Get Top 5 Docs   │  [doc1.txt, doc2.txt, ...]
-└────────┬─────────┘
-         ↓
-┌──────────────────────────────────────┐
-│ Build Smart Prompt                   │
-│ "Using these docs, answer: ..."      │
-└────────┬─────────────────────────────┘
-         ↓
-┌──────────────────┐
-│ Send to Claude   │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Get Response     │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Evaluate Quality │  "Did Claude use documents? No hallucination?"
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Return to User   │  {answer, sources, score}
-└──────────────────┘
-```
+RUNTIME (every user request):
 
----
-
-## AWS Deployment Architecture (Phase 3)
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    AWS Cloud                                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────┐      ┌────────────────┐                 │
-│  │  API Gateway │◄─────┤ Lambda Function│                 │
-│  │  (Public URL)│      │ (rag_agent.py) │                 │
-│  └──────────────┘      └────────────────┘                 │
-│                              │                             │
-│                    ┌─────────┴─────────┐                  │
-│                    ↓                   ↓                  │
-│          ┌──────────────────┐  ┌──────────────────┐      │
-│          │  Environment Vars │  │  CloudWatch Logs │      │
-│          │  (API Keys)       │  │  (Monitoring)    │      │
-│          └──────────────────┘  └──────────────────┘      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-                    ↓         ↓
-        ┌───────────────────────────────┐
-        │  External Services            │
-        ├───────────────────────────────┤
-        │  • Pinecone (Vector DB)       │
-        │  • Claude API (Anthropic)     │
-        └───────────────────────────────┘
++---------------------+
+| User Question       |  "What are income-driven repayment plans?"
++----------+----------+
+           |
+           v
++----------+----------+
+| Voyage AI Embedding |  Question -> 1024-dim vector
++----------+----------+
+           |
+           v
++----------+----------+
+| Pinecone Query      |  top_k=5, cosine similarity
++----------+----------+
+           |
+           v
++----------+----------+
+| Top 5 Documents     |  [{text, score}, ...]
++----------+----------+
+           |
+           v
++----------------------------------+
+| Structured Prompt                |
+| "DOCUMENTS: [labeled docs]       |
+|  QUESTION: [user query]          |
+|  Instructions: cite sources..."  |
++----------+-----------------------+
+           |
+           v
++----------+----------+
+| Claude Sonnet 4.6   |  Generates grounded answer
++----------+----------+
+           |
+           v
++----------+----------+
+| Evaluator           |  Scores faithfulness + relevance
++----------+----------+
+           |
+           v
++----------+--------------------------------------------+
+| Response to User                                      |
+| {response, sources, confidence, retrieval_scores}    |
++-------------------------------------------------------+
 ```
 
 ---
 
-## The 3 Phases
+## AWS Deployment Architecture (Phase 4)
 
 ```
-PHASE 1: Core RAG (Weeks 1-2)
-├── vector_db.py ✓ (done)
-├── llm.py ✓ (done)
-├── rag_agent.py ✓ (done)
-├── evaluation.py ✓ (done)
-├── YOU IMPLEMENT: generate_response() ← HERE
-└── Test locally with sample data
+                    Internet
+                        |
+                        v
+           +------------+------------+
+           |      API Gateway        |
+           |  POST /chat             |
+           |  Public HTTPS endpoint  |
+           +------------+------------+
+                        |
+                        v
+           +------------+------------+
+           |      AWS Lambda         |
+           |  lambda_handler.py      |
+           |  Container image (ECR)  |
+           |  Python 3.11            |
+           +------+-----+------------+
+                  |     |
+         +--------+     +--------+
+         |                       |
+         v                       v
++--------+--------+   +----------+--------+
+| Environment     |   | CloudWatch        |
+| Variables       |   | Logs + Metrics    |
+| ANTHROPIC_KEY   |   | Alarms:           |
+| PINECONE_KEY    |   |  - Error rate     |
+| VOYAGE_KEY      |   |  - p95 latency    |
++-----------------+   |  - Throttles      |
+                       +-------------------+
+                                |
+                    +-----------v-----------+
+                    | External Services     |
+                    |                       |
+                    |  Pinecone (Vector DB) |
+                    |  Anthropic Claude API |
+                    |  Voyage AI Embeddings |
+                    +-----------------------+
+```
 
-PHASE 2: Evaluation & Data (Weeks 3-4)
-├── Build annotation system
-├── Gather real auto-loan data
-├── Test on real data
-└── Measure quality metrics
+**Warm start optimization**: The RAG agent (Pinecone client, Voyage AI client, Claude client) is initialized once at module load time. Lambda reuses the container for subsequent requests, skipping re-initialization. Only the first request per container (cold start) pays the initialization cost.
 
-PHASE 3: AWS Deployment (Weeks 5-6)
-├── Create Lambda function
-├── Set up API Gateway
-├── Add CloudWatch monitoring
-├── Deploy to production
-└── Document everything
+---
 
-PHASE 4: Resume + Interview (Week 7+)
-├── Write portfolio piece
-├── Prepare to explain architecture
-├── Demo live chatbot
-└── Discuss design decisions
+## Gradio Web UI Architecture
+
+```
+Browser
+    |
+    v (HTTP localhost:7860)
++----------------------------+
+|  Gradio Blocks App         |
+|  app.py                    |
+|                            |
+|  +----------+ +---------+  |
+|  | Chat     | | Sources |  |
+|  | Panel    | | Panel   |  |
+|  | (left)   | | (right) |  |
+|  +----------+ +---------+  |
++----------+-----------------+
+           |
+           v (Python function call)
++----------+----------+
+|  _agent (global)    |  Module-level singleton
+|  RAGAgent instance  |  Holds live Pinecone + Voyage + Claude clients
++---------------------+  Kept global to avoid serialization issues with live network sockets
 ```
 
 ---
 
-## Key Components Explained
-
-### Pinecone (Vector Database)
-**What:** A specialized database that stores and searches vectors (numbers)
-**Why:** Regular databases search by exact match. Vector DBs search by SIMILARITY.
-```
-Regular DB: "Find rows where name = 'John'"
-Vector DB: "Find rows similar to [0.2, 0.5, 0.8, ...]"
-```
-
-### Claude API (LLM)
-**What:** AI model that understands text and generates responses
-**Why:** It's smart, but doesn't know YOUR business data (hence RAG)
-
-### RAG Agent (Orchestrator)
-**What:** Code that coordinates between Vector DB and Claude
-**Why:** Ensures proper flow: question → search → generate → evaluate
-
-### Evaluation Module
-**What:** Scores how good answers are
-**Why:** Production systems MUST measure quality (both jobs ask for this)
-
----
-
-## Why This Structure Works for the Job
+## Component Status by Phase
 
 ```
-Job 1 Requirements:
-✓ LLM applications          → RAG Agent uses Claude API
-✓ RAG pipelines            → vector_db.py + llm.py + rag_agent.py
-✓ Prompt engineering       → generate_response() (you design this)
-✓ Data quality             → evaluation.py measures it
-✓ Cloud deployment         → AWS Lambda (Phase 3)
-✓ Model evaluation         → evaluation.py provides metrics
+Phase 1: Core RAG              COMPLETE
+  vector_db_mock.py            Hash-based mock embeddings, in-memory store
+  llm.py                       Claude API wrapper, structured prompt
+  rag_agent.py                 Orchestrator, conversation history
+  evaluation.py                3-metric quality framework
 
-Job 2 Requirements:
-✓ LLM applications         → Whole project
-✓ Prompt refinement        → generate_response() design
-✓ Data annotation          → Can extend to build annotation UI
-✓ Model evaluation         → evaluation.py
-✓ Python + ML concepts     → All built in Python with proper structure
+Phase 2: Evaluation + Data     COMPLETE
+  8 student loan documents     Full lifecycle coverage
+  test_e2e.py                  76.2% overall quality score
+
+Phase 3: Real Vector DB        COMPLETE
+  vector_db.py                 Pinecone serverless, cosine similarity
+  llm.py (updated)             Voyage AI voyage-3-large embeddings
+  setup_pinecone.py            One-time document ingestion
+
+Phase 4: Deployment + UI       COMPLETE
+  lambda_handler.py            AWS Lambda entry point, CORS, warm starts
+  Dockerfile                   ECR container image
+  cloudwatch_config.json       Alarms, dashboards, log filters
+  app.py                       Gradio web interface
+
+Phase 5: Live Data             PLANNED
+  Firecrawl integration        Scrape StudentLoans.gov
+  Scheduled sync               Weekly document updates
+  LLM-as-judge evaluation      Claude scoring Claude's answers
 ```
 
 ---
 
-## Mental Model
+## Key Design Decisions
 
-Think of RAG like being a teacher's assistant:
+### Why Cosine Similarity?
+Cosine similarity measures the angle between two vectors, ignoring magnitude. This is ideal for text embeddings because it compares semantic direction (meaning) rather than vector length (word count). Two documents with the same topic will have high cosine similarity regardless of length.
 
-**Without RAG:**
-- Student: "What was the homework?"
-- AI (Claude alone): "I don't know, I wasn't in your class"
+### Why Average Confidence Score?
+The agent computes confidence as the average retrieval score across all top-5 documents, not the minimum. Using the minimum creates a pessimistic metric that gets worse as you retrieve more documents. The average is more stable and representative of overall retrieval quality.
 
-**With RAG:**
-- Student: "What was the homework?"
-- You (RAG Agent): "Let me check the syllabus..."
-- You: "Here's the syllabus. Based on it, the homework is..."
+### Why a Module-Level Agent in Gradio?
+Gradio internally copies component state between requests. Live network clients (Pinecone, Voyage AI) hold open connections that cannot be serialized and transferred across this boundary. Keeping the agent at module level avoids this entirely and ensures only one set of API connections exists per process.
 
-**Your job:** Be the assistant that finds the right document and gives Claude context.
+### Why Lambda Container Image vs ZIP?
+Lambda ZIP packages have a 50MB compressed limit. The combined size of `anthropic`, `pinecone`, `voyageai`, and `gradio` exceeds this. Container images support up to 10GB, with dependencies installed as a cached layer so rebuilds only re-copy application code.
