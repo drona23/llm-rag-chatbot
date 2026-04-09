@@ -24,6 +24,8 @@ env/
 IMPLEMENTATION_BOOK.md
 SIMPLE_GUIDE.md
 CODE_EXAMPLES.md
+interview_notes.pdf
+generate_interview_notes.py
 
 # IDE
 .vscode/
