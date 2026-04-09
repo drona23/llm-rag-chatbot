@@ -193,6 +193,27 @@ RUNTIME (every user request):
 
 ## Gradio Web UI Architecture
 
+The app supports two modes. The mode is selected at startup based on the `RAG_API_URL` environment variable.
+
+```
++------------------------------------+
+|  app.py starts                     |
+|                                    |
+|  RAG_API_URL set?                  |
+|        |                           |
+|   YES  |   NO                      |
+|   v    |    v                      |
+| Cloud  |  Local                    |
+| mode   |  mode                     |
+|        |                           |
+| HTTP   |  _agent = build_agent()   |
+| POST   |  Pinecone + Voyage + Claude|
+| to AWS |  run in-process           |
++--------+---------------------------+
+```
+
+### Local Mode
+
 ```
 Browser
     |
@@ -213,6 +234,33 @@ Browser
 |  _agent (global)    |  Module-level singleton
 |  RAGAgent instance  |  Holds live Pinecone + Voyage + Claude clients
 +---------------------+  Kept global to avoid serialization issues with live network sockets
+```
+
+### Cloud Mode (Hugging Face Spaces)
+
+```
+Browser (HF Space)
+    |
+    v (Gradio HTTP)
++----------------------------+
+|  Gradio Blocks App         |
+|  app.py (cloud mode)       |
+|  Only gradio + requests    |
+|  installed                 |
++----------+-----------------+
+           |
+           v (requests.post)
++----------+-----------------------------------+
+|  AWS API Gateway                             |
+|  POST /prod/chat                             |
+|  https://shzjgfckxe.execute-api...           |
++----------+-----------------------------------+
+           |
+           v
++----------+----------+
+|  AWS Lambda          |  Full RAG pipeline runs here
+|  lambda_handler.py  |  Pinecone + Voyage AI + Claude
++---------------------+
 ```
 
 ---
@@ -239,7 +287,9 @@ Phase 4: Deployment + UI       COMPLETE
   lambda_handler.py            AWS Lambda entry point, CORS, warm starts
   Dockerfile                   ECR container image
   cloudwatch_config.json       Alarms, dashboards, log filters
-  app.py                       Gradio web interface
+  app.py                       Gradio web interface (dual-mode: local + cloud)
+  requirements_spaces.txt      Lightweight deps for HF Spaces
+  SPACES_README.md             HF Space config with YAML frontmatter
 
 Phase 5: Live Data             PLANNED
   Firecrawl integration        Scrape StudentLoans.gov

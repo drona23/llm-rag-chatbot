@@ -8,6 +8,8 @@
 
 A conversational AI system that answers student loan questions using verified federal documentation. Built with Claude (Anthropic), Pinecone vector search, Voyage AI embeddings, and a custom quality evaluation framework.
 
+**Live demo:** [huggingface.co/spaces/DronA23/student-loan-rag-chatbot](https://huggingface.co/spaces/DronA23/student-loan-rag-chatbot)
+
 ---
 
 ## The Problem
@@ -159,10 +161,11 @@ llm-rag-chatbot/
 │   ├── rag_agent.py               # RAG orchestrator
 │   └── evaluation.py              # Quality metrics (faithfulness, relevance)
 ├── data/student_loans/            # 8 verified federal documents
-├── app.py                         # Gradio web UI (live demo)
+├── app.py                         # Gradio web UI (local + HF Spaces dual-mode)
 ├── lambda_handler.py              # AWS Lambda entry point
 ├── Dockerfile                     # Lambda container image
 ├── cloudwatch_config.json         # CloudWatch alarms and dashboard config
+├── requirements_spaces.txt        # Lightweight deps for Hugging Face Spaces
 ├── setup_pinecone.py              # One-time document ingestion script
 ├── test_phase1_step1.py           # Tests response generation
 ├── test_phase1_step2.py           # Tests full RAG pipeline
@@ -212,6 +215,8 @@ python app.py
 
 ## Web UI (Gradio)
 
+**Public demo:** [huggingface.co/spaces/DronA23/student-loan-rag-chatbot](https://huggingface.co/spaces/DronA23/student-loan-rag-chatbot)
+
 The Gradio interface runs locally at `http://localhost:7860`.
 
 Layout:
@@ -223,11 +228,14 @@ source venv/bin/activate
 python app.py
 ```
 
-To get a shareable public link for demos:
-```python
-# In app.py, change the last line to:
-demo.launch(share=True)
-```
+The app supports two modes controlled by the `RAG_API_URL` environment variable:
+
+| Mode | How to activate | What runs |
+|------|----------------|-----------|
+| Local | No `RAG_API_URL` set | Full RAG agent in-process |
+| Cloud | `RAG_API_URL=https://...` | Forwards requests to AWS Lambda |
+
+The Hugging Face Spaces deployment uses cloud mode. Only `gradio` and `requests` are installed there. The heavy ML dependencies (Pinecone, Voyage AI, Anthropic) run entirely on Lambda.
 
 ---
 
@@ -286,10 +294,16 @@ aws lambda update-function-configuration \
 aws apigateway create-rest-api --name "StudentLoanRAG"
 ```
 
+### Live Endpoint
+
+```
+POST https://shzjgfckxe.execute-api.us-east-1.amazonaws.com/prod/chat
+```
+
 ### API Request and Response
 
 ```json
-POST https://your-api.execute-api.us-east-1.amazonaws.com/chat
+POST https://shzjgfckxe.execute-api.us-east-1.amazonaws.com/prod/chat
 Content-Type: application/json
 
 {
@@ -329,6 +343,7 @@ timeline
             : API Gateway public endpoint
             : CloudWatch monitoring and alarms
             : Gradio web UI for live demos
+            : Hugging Face Spaces public demo
     Phase 5 : Live Data
             : Firecrawl integration
             : Auto-sync from StudentLoans.gov

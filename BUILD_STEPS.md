@@ -246,8 +246,11 @@ Phase 3 (planned):
 ├── src/vector_db.py (exists, needs Pinecone key)
 └── Voyage AI embedding integration
 
-Phase 4 (planned):
+Phase 4 (complete):
 ├── lambda_handler.py
 ├── Dockerfile
-└── cloudwatch_config.json
+├── cloudwatch_config.json
+├── app.py (updated: dual-mode local + HF Spaces)
+├── requirements_spaces.txt
+└── SPACES_README.md
 ```

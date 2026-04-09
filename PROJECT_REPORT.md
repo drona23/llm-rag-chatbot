@@ -77,6 +77,13 @@ This structured prompt design reduced hallucination and improved source citation
 - `app.py`: Gradio `gr.Blocks` layout with chat panel and live sources sidebar
 - Right panel updates in real time with each response, showing retrieved source documents, cosine similarity scores, and confidence level (HIGH / MEDIUM / LOW)
 - Example questions preloaded for interview demos
+- Dual-mode operation: runs locally against a real agent, or in cloud mode by setting `RAG_API_URL` to forward requests to the Lambda endpoint
+
+**Hugging Face Spaces deployment:**
+- `requirements_spaces.txt`: lightweight dependency file containing only `gradio` and `requests` (no ML dependencies)
+- `SPACES_README.md`: Space configuration with YAML frontmatter (`sdk: gradio`, `app_file: app.py`)
+- Public demo hosted at [huggingface.co/spaces/DronA23/student-loan-rag-chatbot](https://huggingface.co/spaces/DronA23/student-loan-rag-chatbot)
+- `RAG_API_URL` injected as a Space secret so the frontend calls the live AWS endpoint
 
 ---
 
@@ -92,6 +99,9 @@ This structured prompt design reduced hallucination and improved source citation
 | Sentence splitter broke on decimals | "6.53%" split into "6" + "53%" | Regex lookbehind split |
 | `gr.State` with live SSL sockets | Gradio deepcopy crash on startup | Move agent to module-level global |
 | Gradio chat history format | TypeError on every message | Update from tuple pairs to messages format |
+| HF Spaces installed Gradio 5.x despite `>=5.0.0` | `theme` in `launch()` not valid, build error | Removed Gradio pin; platform manages the version |
+| numpy 2.x pulled by voyageai in Lambda | C compiler not found, build failure | Pin `numpy==1.26.4` before other deps in Dockerfile |
+| Lambda image built as OCI manifest list | Lambda only accepts single-arch images | Added `--provenance=false --sbom=false` to `docker buildx` |
 
 ---
 
