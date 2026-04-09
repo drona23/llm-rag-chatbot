@@ -1,13 +1,23 @@
 """
 Gradio web UI for the Student Loan RAG Chatbot.
 Layout: chat on left, live sources + confidence on right.
+
+Dual-mode operation:
+  - Local:  set ANTHROPIC_API_KEY / PINECONE_API_KEY / VOYAGE_API_KEY in .env
+            The RAG agent runs in-process.
+  - Cloud:  set RAG_API_URL to the AWS API Gateway endpoint.
+            The UI forwards each message to the live Lambda function via HTTP.
+            No heavy ML dependencies needed (gradio + requests only).
 """
+import os
 import gradio as gr
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Global agent -- initialized once at startup.
+RAG_API_URL = os.environ.get("RAG_API_URL", "").strip()
+
+# Global agent -- used in local mode only.
 # gr.State can't deepcopy objects that hold live SSL sockets (Pinecone/Voyage),
 # so we keep the agent at module level and close over it in callbacks.
 _agent = None
@@ -22,6 +32,18 @@ def build_agent():
     llm = LLMChat()
     store = VectorStore()
     return RAGAgent(vector_store=store, llm=llm)
+
+
+def _call_api(message: str) -> dict:
+    """Call the live AWS Lambda endpoint and return a result dict."""
+    import requests
+    resp = requests.post(
+        RAG_API_URL,
+        json={"message": message},
+        timeout=130,
+    )
+    resp.raise_for_status()
+    return resp.json()
 
 
 def format_sources(sources: list[str], scores: list[float]) -> str:
@@ -47,7 +69,10 @@ def chat(message, history):
     if not message.strip():
         return history, "*Ask a question to see retrieved sources here.*"
 
-    result = _agent.answer(message)
+    if RAG_API_URL:
+        result = _call_api(message)
+    else:
+        result = _agent.answer(message)
 
     sources_md = format_sources(result["sources"], result["retrieval_scores"])
     confidence_md = f"**{confidence_label(result['confidence'])}**"
@@ -62,18 +87,19 @@ def chat(message, history):
 
 
 def clear():
-    _agent.reset_conversation()
+    if not RAG_API_URL and _agent:
+        _agent.reset_conversation()
     return [], "*Ask a question to see retrieved sources here.*"
 
 
 def build_ui():
-    with gr.Blocks(title="Student Loan RAG Chatbot") as demo:
+    with gr.Blocks(title="Student Loan RAG Chatbot", theme=gr.themes.Soft()) as demo:
         gr.Markdown("# Student Loan RAG Chatbot\nPowered by Claude + Pinecone + Voyage AI")
 
         with gr.Row():
             # Left: chat
             with gr.Column(scale=3):
-                chatbot = gr.Chatbot(label="Chat", height=520)
+                chatbot = gr.Chatbot(label="Chat", height=520, type="messages")
                 with gr.Row():
                     msg_box = gr.Textbox(
                         placeholder="Ask about student loans...",
@@ -121,11 +147,14 @@ def build_ui():
 
 
 if __name__ == "__main__":
-    _agent = build_agent()
+    if RAG_API_URL:
+        print(f"Cloud mode: forwarding requests to {RAG_API_URL}")
+    else:
+        _agent = build_agent()
+        print("Local mode: running RAG agent in-process")
     demo = build_ui()
     demo.launch(
         server_name="0.0.0.0",
         server_port=7860,
         share=False,   # set True to get a public gradio.live URL
-        theme=gr.themes.Soft(),
     )
